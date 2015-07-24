@@ -251,11 +251,12 @@
 
 			// get the index of the dragged element within its parent
 			oldIndex = _index(target);
+      this._oldIndex = oldIndex;
 
 			// Check filter
 			if (typeof filter === 'function') {
 				if (filter.call(this, evt, target, this)) {
-					_dispatchEvent(_this, originalTarget, 'filter', target, el, oldIndex);
+					_dispatchEvent(_this, originalTarget, 'filter', target, el, this._oldIndex);
 					evt.preventDefault();
 					return; // cancel dnd
 				}
@@ -265,7 +266,7 @@
 					criteria = _closest(originalTarget, criteria.trim(), el);
 
 					if (criteria) {
-						_dispatchEvent(_this, criteria, 'filter', target, el, oldIndex);
+						_dispatchEvent(_this, criteria, 'filter', target, el, this._oldIndex);
 						return true;
 					}
 				});
@@ -381,7 +382,7 @@
 				Sortable.active = this;
 
 				// Drag start event
-				_dispatchEvent(this, rootEl, 'start', dragEl, rootEl, oldIndex);
+				_dispatchEvent(this, rootEl, 'start', dragEl, rootEl, this._oldIndex);
 			}
 		},
 
@@ -680,14 +681,14 @@
 						newIndex = _index(dragEl);
 
 						// drag from one list and drop into another
-						_dispatchEvent(null, dragEl.parentNode, 'sort', dragEl, rootEl, oldIndex, newIndex);
-						_dispatchEvent(this, rootEl, 'sort', dragEl, rootEl, oldIndex, newIndex);
+						_dispatchEvent(null, dragEl.parentNode, 'sort', dragEl, rootEl, this._oldIndex, newIndex);
+						_dispatchEvent(this, rootEl, 'sort', dragEl, rootEl, this._oldIndex, newIndex);
 
 						// Add event
-						_dispatchEvent(null, dragEl.parentNode, 'add', dragEl, rootEl, oldIndex, newIndex);
+						_dispatchEvent(null, dragEl.parentNode, 'add', dragEl, rootEl, this._oldIndex, newIndex);
 
 						// Remove event
-						_dispatchEvent(this, rootEl, 'remove', dragEl, rootEl, oldIndex, newIndex);
+						_dispatchEvent(this, rootEl, 'remove', dragEl, rootEl, this._oldIndex, newIndex);
 					}
 					else {
 						// Remove clone
@@ -698,14 +699,14 @@
 							newIndex = _index(dragEl);
 
 							// drag & drop within the same list
-							_dispatchEvent(this, rootEl, 'update', dragEl, rootEl, oldIndex, newIndex);
-							_dispatchEvent(this, rootEl, 'sort', dragEl, rootEl, oldIndex, newIndex);
+							_dispatchEvent(this, rootEl, 'update', dragEl, rootEl, this._oldIndex, newIndex);
+							_dispatchEvent(this, rootEl, 'sort', dragEl, rootEl, this._oldIndex, newIndex);
 						}
 					}
 
 					if (Sortable.active) {
 						// Drag end event
-						_dispatchEvent(this, rootEl, 'end', dragEl, rootEl, oldIndex, newIndex);
+						_dispatchEvent(this, rootEl, 'end', dragEl, rootEl, this._oldIndex, newIndex);
 
 						// Save sorting
 						this.save();
