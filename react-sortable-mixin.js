@@ -97,7 +97,17 @@
 						_activeComponent = this;
 					}
 					else if (name === 'onAdd' || name === 'onUpdate') {
-						evt.from.insertBefore(evt.item, _nextSibling);
+            // IE9 Hack.
+            // For some reason IE9 sets _nextSibling to a DOM element when it should be null.
+            // This causes IE9 to raise "DOM Exception: NOT_FOUND_ERR (8)".
+            // evt.from.insertBefore(evt.item, _nextSibling) is wrapped in a try catch block.
+            // If it fails, we try with null.
+            try {
+              evt.from.insertBefore(evt.item, _nextSibling);
+            }
+            catch(err) {
+              evt.from.insertBefore(evt.item, null);
+            }
 
 						var newState = {},
 							remoteState = {},
